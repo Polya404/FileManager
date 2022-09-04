@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 
 import java.io.File;
 import java.util.List;
-import java.util.Scanner;
 
 public class MkFile extends Command{
     public MkFile(Context context) {
