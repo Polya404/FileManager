@@ -7,9 +7,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Scanner;
 
-public class Rm extends Command{
+public class Rm extends Command {
     public Rm(Context context) {
         super(context);
     }
@@ -17,14 +16,31 @@ public class Rm extends Command{
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Specify the path,  where you want to delete file.");
-        File file = new File(scanner.nextLine());
+        File file = new File(args.get(0));
+        if (args.size() == 2) {
+            deleteDirectoryWithRecursion(file);
+        } else {
+            deleteDirectory(file);
+        }
+        return "File was delete";
+    }
+
+    @SneakyThrows
+    private void deleteDirectory(File file) {
         String path = file.getPath();
-        if (file.isDirectory() && (!FileUtils.isEmptyDirectory(file))){
-            return "Directory not empty";
+        if (file.isDirectory() && (!FileUtils.isEmptyDirectory(file))) {
+            System.out.println("Directory not empty");
         }
         Files.deleteIfExists(Path.of(path));
-        return "File was delete";
+    }
+
+    boolean deleteDirectoryWithRecursion(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectoryWithRecursion(file);
+            }
+        }
+        return directoryToBeDeleted.delete();
     }
 }

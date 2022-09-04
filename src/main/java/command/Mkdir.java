@@ -14,16 +14,7 @@ public class Mkdir extends Command {
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Specify the path,  where you want to create a new directory.");
-
-        String path = scanner.nextLine();
-
-        System.out.println("Enter directory name");
-
-        String name = scanner.nextLine();
-
-        File folder = new File(path + File.separator + name);
+        File folder = new File(args.get(0) + File.separator + args.get(1));
         if (!folder.exists()) {
             folder.mkdir();
         }

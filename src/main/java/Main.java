@@ -27,7 +27,7 @@ public class Main {
                 continue;
             }
 
-            List<String> allArguments = Arrays.asList(line.split(" "));
+            List<String> allArguments = Arrays.asList(line.split(", "));
 
             String commandName = allArguments.get(0);
             if (commandName.equals("q") || commandName.equals("exit")) {

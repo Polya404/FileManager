@@ -21,15 +21,13 @@ public class AddText extends Command {
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        System.out.println("Add text");
-        String str = scanner.nextLine();
         System.out.println("add an entry to the end of the file ?  y/n");
         String answer = scanner.nextLine();
         if (answer.equals("n")) {
-            addTextOnPosition(str);
+            addTextOnPosition(args.get(0));
         } else {
 
-            Files.write(file.toPath(), str.getBytes(), StandardOpenOption.APPEND);
+            Files.write(file.toPath(), args.get(0).getBytes(), StandardOpenOption.APPEND);
         }
         return "Text added";
     }

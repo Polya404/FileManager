@@ -14,16 +14,7 @@ public class MkFile extends Command{
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Specify the path,  where you want to create a new file.");
-
-        String path = scanner.nextLine();
-
-        System.out.println("Enter file name");
-
-        String name = scanner.nextLine();
-
-        File file = new File(path + File.separator + name);
+        File file = new File(args.get(0) + File.separator + args.get(1));
         if (!file.exists()) {
             file.createNewFile();
         }
