@@ -1,12 +1,19 @@
 package command;
 
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Ls extends Command {
     public Ls(Context context) {
@@ -15,54 +22,67 @@ public class Ls extends Command {
 
     @Override
     public String execute(List<String> args) {
-        File file = context.getCurrentDirectory();
-        File[] allFiles = file.listFiles();
-        StringBuilder result = new StringBuilder();
-        if (allFiles != null) {
-            for (File each: allFiles){
-                result.append(each.getName()).append(":");
-                result.append(table(each.getName().length()));
-                result.append(each.getUsableSpace());
-                if (args.isEmpty())
-                    result.append("\n");
-                else {
-                    if (args.get(0).equals("-s"))
-                        size(result, each);
-                    if (args.get(0).equals("-p")){
-                        permission(result, each);
-                    }
+        if (context.getCurrentDirectory().listFiles().length==0) {
+            return "Dir " + context.getCurrentDirectory() + " is empty";
+        }
+        args = args.isEmpty() ? args : Arrays.asList(args.get(0).split(""));
+        List<List<String>> result = new ArrayList<>();
+        result.add(createHeaders(args));
+        result.addAll(createBody(args));
+        printTable(result, getPreCalculatedStringFormat(result));
+        return "";
+    }
 
-                }
+    private void printTable(List<List<String>> result, String format) {
+        result.forEach(row -> System.out.printf((format) + "%n", row.toArray()));
+    }
+
+    public String getPreCalculatedStringFormat(List<List<String>> columns) {
+        int columnsCount = columns.get(0).size();
+        List<Integer> result = new ArrayList<>();
+        for (MutableInt column = new MutableInt(0);
+             column.getValue() < columnsCount; column.increment()) {
+            result.add(columns.stream().
+                    map(row -> row.get(column.getValue())).
+                    map(String::length).
+                    max(Integer::compare).get());
+        }
+        return "| " + result.stream().map(v -> "%-" + v + "s").collect(Collectors.joining(" | ")) + " |";
+    }
+
+    private List<List<String>> createBody(List<String> args) {
+        List<List<String>> body = new ArrayList<>();
+        for (File f : Objects.requireNonNull(context.getCurrentDirectory().listFiles())) {
+            body.add(buildRow(args, f));
+        }
+        return body;
+    }
+
+    private List<String> buildRow(List<String> args, File file) {
+        List<String> row = new ArrayList<>();
+        row.add(file.getName());
+        for (String flag : args) {
+            switch (flag) {
+                case "s" -> row.add(String.valueOf(FileUtils.sizeOf(file)));
+                case "r" -> row.add(String.valueOf(file.canRead()));
+                case "w" -> row.add(String.valueOf(file.canWrite()));
+                case "e" -> row.add(file.isHidden() ? "" : FilenameUtils.getExtension(file.getName()));
             }
         }
-        return result.toString();
+        return row;
     }
 
-    @SneakyThrows
-    private void size(StringBuilder result, File each) {
-        result.append(table(10));
-        Path path = Paths.get(each.getPath());
-        long size = Files.size(path);
-        String s = String.format("%,d bytes", size);
-        result.append(s).append("\n");
-    }
-
-    private void permission(StringBuilder result, File file){
-        result.append(table(10));
-        if (file.canRead())
-            result.append("r");
-        if (file.canWrite())
-            result.append("w");
-        if (file.canExecute())
-            result.append("x");
-        result.append("\n");
-    }
-
-    private String table(int length) {
-        String s = "";
-        for (int i = 0; i < 20 - length; i++) {
-            s += "-";
+    private List<String> createHeaders(List<String> args) {
+        List<String> header = new ArrayList<>();
+        header.add("File name");
+        for (String flag : args) {
+            switch (flag) {
+                case "s" -> header.add("Size");
+                case "r" -> header.add("Readable");
+                case "w" -> header.add("Writable");
+                case "e" -> header.add("Extension");
+            }
         }
-        return s;
+        return header;
     }
 }

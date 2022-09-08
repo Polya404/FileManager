@@ -17,12 +17,16 @@ public class Rm extends Command {
     @SneakyThrows
     public String execute(List<String> args) {
         File file = new File(args.get(0));
-        if (args.size() == 2) {
-            deleteDirectoryWithRecursion(file);
+        if (file.exists()) {
+            if (args.size() == 2 && args.get(1).equals("rf")) {
+                deleteDirectoryWithRecursion(file);
+            } else {
+                deleteDirectory(file);
+            }
+            return "File was delete";
         } else {
-            deleteDirectory(file);
+            return "File not found";
         }
-        return "File was delete";
     }
 
     @SneakyThrows

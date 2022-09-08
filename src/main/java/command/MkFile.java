@@ -13,7 +13,7 @@ public class MkFile extends Command{
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        File file = new File(args.get(0) + File.separator + args.get(1));
+        File file = new File(context.getCurrentDirectory() , args.get(0));
         if (!file.exists()) {
             file.createNewFile();
         }

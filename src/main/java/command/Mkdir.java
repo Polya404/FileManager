@@ -14,7 +14,7 @@ public class Mkdir extends Command {
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        File folder = new File(args.get(0) + File.separator + args.get(1));
+        File folder = new File(context.getCurrentDirectory() , args.get(0));
         if (!folder.exists()) {
             folder.mkdir();
         }

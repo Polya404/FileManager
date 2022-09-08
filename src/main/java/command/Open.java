@@ -15,7 +15,16 @@ public class Open extends Command{
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        File file = context.getCurrentDirectory();
+        if (args.isEmpty()){
+            return "Please provide argument";
+        }
+        File file = new File(context.getCurrentDirectory(), args.get(0));
+        if (!file.exists()){
+            return "File not found";
+        }
+        if (!file.isFile()){
+            return "give me file please";
+        }
         return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     }
 }

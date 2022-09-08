@@ -16,8 +16,9 @@ public class LsTree extends Command {
     @Override
     public String execute(List<String> args) {
         File file = context.getCurrentDirectory();
-        for (File f : Objects.requireNonNull(file.listFiles())){
-            getFileStructure(f, "");
+        File[] files = Objects.requireNonNull(file.listFiles());
+        for (int i = 0; i < (args.size() == 0 ? Objects.requireNonNull(file.listFiles()).length :Integer.parseInt(args.get(0))); i ++){
+            getFileStructure(files[i], "");
         }
         return "";
     }
