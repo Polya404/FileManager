@@ -8,6 +8,12 @@ public class Cd extends Command {
         super(context);
     }
 
+    /**
+     * this method allows you to enter directories or
+     * return higher in the directory hierarchy
+     * @param args directory name to enter it or ".." to return
+     * @return ""
+     */
     @Override
     public String execute(List<String> args) {
         if (args.isEmpty()) {

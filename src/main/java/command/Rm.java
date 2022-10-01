@@ -13,9 +13,19 @@ public class Rm extends Command {
         super(context);
     }
 
+    /**
+     * this method removes an empty directory or removes
+     * a directory with files via recursion
+     *
+     * @param args file path
+     * @return file deletion or error message
+     */
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
+        if (args.size() == 0) {
+            return "Enter path";
+        }
         File file = new File(args.get(0));
         if (file.exists()) {
             if (args.size() == 2 && args.get(1).equals("rf")) {
@@ -29,6 +39,11 @@ public class Rm extends Command {
         }
     }
 
+    /**
+     * removes an empty directory
+     *
+     * @param file directory
+     */
     @SneakyThrows
     private void deleteDirectory(File file) {
         String path = file.getPath();
@@ -38,7 +53,15 @@ public class Rm extends Command {
         Files.deleteIfExists(Path.of(path));
     }
 
-    boolean deleteDirectoryWithRecursion(File directoryToBeDeleted) {
+    /**
+     * recursively goes through the entire contents of
+     * the directory and deletes everything and then
+     * deletes the directory itself
+     *
+     * @param directoryToBeDeleted directory
+     * @return boolean
+     */
+    private boolean deleteDirectoryWithRecursion(File directoryToBeDeleted) {
         File[] allContents = directoryToBeDeleted.listFiles();
         if (allContents != null) {
             for (File file : allContents) {

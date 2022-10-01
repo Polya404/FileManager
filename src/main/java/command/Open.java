@@ -7,22 +7,28 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class Open extends Command{
+public class Open extends Command {
     public Open(Context context) {
         super(context);
     }
 
+    /**
+     * this method allows you to go into files and view information from a file
+     *
+     * @param args file path
+     * @return file contents
+     */
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
-        if (args.isEmpty()){
+        if (args.isEmpty()) {
             return "Please provide argument";
         }
         File file = new File(context.getCurrentDirectory(), args.get(0));
-        if (!file.exists()){
+        if (!file.exists()) {
             return "File not found";
         }
-        if (!file.isFile()){
+        if (!file.isFile()) {
             return "give me file please";
         }
         return FileUtils.readFileToString(file, StandardCharsets.UTF_8);

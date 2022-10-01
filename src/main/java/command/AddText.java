@@ -18,6 +18,13 @@ public class AddText extends Command {
         super(context);
     }
 
+    /**
+     * this method adds text to the file, asking where exactly
+     * to add the text, in the middle or at the end of the file
+     *
+     * @param args command line arguments
+     * @return message that text has been added
+     */
     @Override
     @SneakyThrows
     public String execute(List<String> args) {
@@ -33,6 +40,12 @@ public class AddText extends Command {
         return "Text added";
     }
 
+    /**
+     * this method adds text to the middle of the file
+     * at the position you specify, overwriting the information from there
+     *
+     * @param data text to write to file
+     */
     @SneakyThrows
     public void addTextOnPosition(String data) {
         System.out.println("write in which position you want to write the text ");
