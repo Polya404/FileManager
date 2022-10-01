@@ -11,8 +11,8 @@ public class Cd extends Command {
     /**
      * this method allows you to enter directories or
      * return higher in the directory hierarchy
-     * @param args directory name to enter it or ".." to return
-     * @return ""
+     * @param args directory name to enter it or " .." to return
+     * @return current directory
      */
     @Override
     public String execute(List<String> args) {
@@ -22,7 +22,7 @@ public class Cd extends Command {
             String direction = args.get(0);
             File currentDirectory = context.getCurrentDirectory();
 
-            if (direction.equals("..")) {
+            if (direction.equals(" ..")) {
                 context.setCurrentDirectory(currentDirectory.getParentFile());
             } else {
                 File child = new File(currentDirectory, direction);
@@ -33,6 +33,6 @@ public class Cd extends Command {
                 }
             }
         }
-        return "";
+        return String.valueOf(context.getCurrentDirectory());
     }
 }
